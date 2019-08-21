@@ -1,0 +1,84 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'IntroManager/style.css' %}" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+{% block navBar %}
+  <div class="topnav" id="myTopnav">
+    <a href={% url 'IntroManager:query' %}>
+      <img src={% static 'IntroManager/UVCLogo.png' %} alt="UVC Logo" style="width: auto; height: 20px;"/>
+      </a>
+    <a href={% url 'IntroManager:query' %}>QUERY</a>
+    <a href={% url 'login' %}>LOGIN</a>
+    <a href={% url 'IntroManager:query' %}>SETTINGS</a>
+  </div>
+<br>
+{% endblock %}
+
+{% block queryForms %}
+  <div id=InputArea>
+    <form action={% url 'IntroManager:query' %} method="post">{% csrf_token %}
+      <label for="urlinput"> Linkedin URL: </label>
+    <br>
+      <input name ="searchinput" id="urlinput" type="text" maxlength="100" required placeholder="Search for a 2nd Connection's LinkedIn Profile" />
+    <br>
+      <label for="username"> LinkedIn Username: </label>  
+    <br>
+      <input name ="username" id="un" type="text" maxlength="100" />
+    <br>
+      <label for="password"> LinkedIn Password:  </label> 
+    <br>
+      <input name ="password" id="pw" type="password" maxlength="100" />
+    <br>
+      <input type="submit" value="Submit">
+    </form>
+    <!--   <form>{% csrf_token %}
+    <label for="urlinput">Search for a LI Profile: </label>
+    <input name = "searchinput" id="urlinput" type="text" maxlength="100" required />
+    <button id="b2">Search A 1st Connection</button>
+  </form> -->
+  </div>
+
+<br><br>
+{% endblock %}
+
+
+{% block tableDisplay %}
+
+  {% if searched %}
+    <h3 id='tableheading'>Mutual Contacts with {{searched}}</h3>
+  {% else %}
+    <h3></h3>
+  {% endif %}
+
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>LinkedIn URL</th>
+      <th>Location</th>
+      <th>Title</th>
+      <th>Shared Connections</th>
+    </tr>
+    {% for prim in prims_list %}
+      <tr>
+        <td>{{prim.uid}}</td>
+        <td>{{prim.name}}</td>
+        <td><a href={{prim.url}}>{{prim.url}}</a></td>
+        <td>{{prim.location}}</td>
+        <td>{{prim.title}}</td>
+        <td>{{prim.numShared}}</td>
+      </tr>
+    {% empty %}
+      <tr>
+        <td>N.A.</td>
+        <td>N.A.</td>
+        <td>N.A.</td>
+        <td>N.A.</td>
+        <td>N.A.</td>
+        <td>N.A.</td>
+      </tr>
+    {% endfor %}
+  </table>
+{% endblock %}
+
